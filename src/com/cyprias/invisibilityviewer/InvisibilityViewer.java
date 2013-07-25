@@ -11,12 +11,12 @@ import java.util.Map.Entry;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import net.minecraft.server.v1_4_R1.MobEffectList;
-import net.minecraft.server.v1_4_R1.WatchableObject;
+import net.minecraft.server.v1_6_R2.MobEffectList;
+import net.minecraft.server.v1_6_R2.WatchableObject;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -57,14 +57,14 @@ public class InvisibilityViewer extends JavaPlugin {
 		this.commands = new Commands(this);
 
 
-		try {
-			Metrics metrics = new Metrics(this);
-			metrics.start();
-		} catch (IOException e) {
-		}
+//		try {
+//			Metrics metrics = new Metrics(this);
+//			metrics.start();
+//		} catch (IOException e) {
+//		}
 
 		invisEffect = MobEffectList.INVISIBILITY;
-		Logger.info(String.format("%s v%s is loaded.", pluginName, this.getDescription().getVersion()));
+		this.getLogger().info(String.format("%s v%s is loaded.", pluginName, this.getDescription().getVersion()));
 	}
 	
 	
@@ -83,7 +83,7 @@ public class InvisibilityViewer extends JavaPlugin {
 		addPacketListener();
 		fillViewInvis();
 
-		Logger.info(String.format("%s v%s is enabled.", pluginName, this.getDescription().getVersion()));
+		this.getLogger().info(String.format("%s v%s is enabled.", pluginName, this.getDescription().getVersion()));
 	}
 
 	public static final JavaPlugin getInstance() {
@@ -101,7 +101,7 @@ public class InvisibilityViewer extends JavaPlugin {
 		}
 		getServer().getScheduler().cancelTasks(this);
 		
-		Logger.info(String.format("%s v%s is disabled.", pluginName, this.getDescription().getVersion()));
+		this.getLogger().info(String.format("%s v%s is disabled.", pluginName, this.getDescription().getVersion()));
 	}
 
 	private void checkVersion() {
@@ -113,8 +113,8 @@ public class InvisibilityViewer extends JavaPlugin {
 					if (info != null) {
 						String curVersion = getDescription().getVersion();
 						if (VersionChecker.compareVersions(curVersion, info.getTitle()) < 0) {
-							Logger.warning("We're running v" + curVersion + ", v" + info.getTitle() + " is available");
-							Logger.warning(info.getLink());
+							getLogger().warning("We're running v" + curVersion + ", v" + info.getTitle() + " is available");
+							getLogger().warning(info.getLink());
 						}
 					}
 				} catch (SAXException e) {
@@ -215,7 +215,7 @@ public class InvisibilityViewer extends JavaPlugin {
 												continue;
 											
 											if (Config.debugMessages == true) 
-												Logger.info(player.getName() + "'s receving flag " + entFlag + " on " + ((entity instanceof Player)  ? ((Player) entity).getName() : entity.getType() + "("+eID+")"));
+												getLogger().info(player.getName() + "'s receving flag " + entFlag + " on " + ((entity instanceof Player)  ? ((Player) entity).getName() : entity.getType() + "("+eID+")"));
 											
 
 											
@@ -239,7 +239,7 @@ public class InvisibilityViewer extends JavaPlugin {
 													mods.write(i, list.set(a, new WatchableObject(list.get(a).c(), list.get(a).a(), defaultMask)));
 													
 													if (Config.debugMessages == true) 
-														Logger.info("Switched " + player.getName() + "'s receving flag " + entFlag + " on " + ((entity instanceof Player)  ? ((Player) entity).getName() : entity.getType() + "("+eID+")") + " to " + defaultMask);
+														getLogger().info("Switched " + player.getName() + "'s receving flag " + entFlag + " on " + ((entity instanceof Player)  ? ((Player) entity).getName() : entity.getType() + "("+eID+")") + " to " + defaultMask);
 												}
 
 											} else if (entFlag == defaultMask && distanceTaskIDs.containsKey(entity)) {
@@ -277,7 +277,7 @@ public class InvisibilityViewer extends JavaPlugin {
 		//	return;
 		
 		if (Config.debugMessages == true)
-			Logger.info("Sending flag "+flag+" on entity " + entID + " to " + player.getName());
+			this.getLogger().info("Sending flag "+flag+" on entity " + entID + " to " + player.getName());
 		
 		PacketContainer invisPacket = protocolManager.createPacket(Packets.Server.ENTITY_METADATA);
 
@@ -432,7 +432,7 @@ public class InvisibilityViewer extends JavaPlugin {
 
 	public void sendMessage(CommandSender sender, String message, Boolean showConsole, Boolean sendPrefix) {
 		if (sender instanceof Player && showConsole == true)
-			Logger.info(sender.getName() + "->" + message);
+			this.getLogger().info(sender.getName() + "->" + message);
 		
 		if (sendPrefix == true) {
 			sender.sendMessage(chatPrefix + message);
